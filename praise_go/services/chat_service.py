@@ -1,8 +1,5 @@
 from typing import Any
-
 import requests
-
-from praise_go.utils.image_manipulation import compressImgToBase64
 
 def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, propmt_content: Any):
     payload = {
