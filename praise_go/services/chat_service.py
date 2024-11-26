@@ -2,7 +2,9 @@ from typing import Any
 
 import requests
 
-def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, propmt: Any):
+from praise_go.utils.image_manipulation import compressImgToBase64
+
+def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, propmt_content: Any):
     payload = {
         "model": model,
         "messages": [
@@ -12,7 +14,7 @@ def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, prop
             },
             {
                 "role": "user",
-                "content": propmt
+                "content": propmt_content
             }
         ]
     }
