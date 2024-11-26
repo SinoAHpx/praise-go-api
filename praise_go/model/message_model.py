@@ -14,12 +14,14 @@ class ImageMessage(Message):
     def serialize(self) -> dict:
         return {
             "role": self.role,
-            "content": {
-                "type": "image_url",
-                "image_url": {
-                    "url": self.image_url
+            "content": [
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": self.image_url
+                    }
                 }
-            }
+            ]
         }
         
 class TextMessage(Message):
@@ -32,9 +34,3 @@ class TextMessage(Message):
             "role": self.role,
             "content": self.text
         }
-
-
-def some(*p: list[Message]):
-    print(p[3].serialize())
-    
-some(TextMessage("awd"), TextMessage("awd"), TextMessage("awd"),TextMessage("awd4"))
