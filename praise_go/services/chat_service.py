@@ -1,20 +1,19 @@
-from typing import Any
 import requests
+from praise_go.model.message_model import ImageMessage, Message, TextMessage
 
-def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, propmt_content: Any):
+def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, *prompts: list[Message]):
     payload = {
         "model": model,
         "messages": [
             {
                 "role": "system",
                 "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": propmt_content
             }
         ]
     }
+    
+    payload["messages"].extend(prompt.serialize() for prompt in prompts)
+    
     headers = {
         "Authorization": f"Bearer {apiKey}"
     }
