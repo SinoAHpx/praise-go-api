@@ -53,7 +53,10 @@ def compressImg(img_local_path: str) -> bytes:
     return compressed
     
 def compressImgToBase64(img_local_path: str) -> str:
-    b64 = compressImg(img_local_path)
-    compressed_img = base64.b64encode(b64).decode('utf-8')
+    binary = compressImg(img_local_path)
+    encoded_string = base64.b64encode(binary).decode('utf-8')
+    mime = getImgMimeType(img_local_path)
+    
+    compressed_img = f"data:{mime};base64,{encoded_string}"
     
     return compressed_img
