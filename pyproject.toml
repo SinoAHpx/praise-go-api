@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "praise-go-api"
+version = "0.1.0"
+description = "Backend support for PriseGo"
+authors = ["AHpx"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = {extras = ["standard"], version = "^0.115.5"}
+pillow = "^11.0.0"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
