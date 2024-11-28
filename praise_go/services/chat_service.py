@@ -1,7 +1,7 @@
 import requests
-from praise_go.model.message_model import ImageMessage, Message, TextMessage
+from praise_go.model.message_model import Message
 
-def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, *prompts: list[Message]):
+def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, *prompts: list[Message]):
     payload = {
         "model": model,
         "messages": [
@@ -15,9 +15,9 @@ def request_chat(baseUrl: str, model: str, apiKey: str, system_prompt: str, *pro
     payload["messages"].extend(prompt.serialize() for prompt in prompts)
     
     headers = {
-        "Authorization": f"Bearer {apiKey}"
+        "Authorization": f"Bearer {api_key}"
     }
-    response = requests.post(baseUrl, json=payload, headers=headers)
+    response = requests.post(base_url, json=payload, headers=headers)
     
     if response.status_code != 200:
         raise SystemError(f'Response error: {response.text}')
