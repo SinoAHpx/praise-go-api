@@ -12,3 +12,7 @@ def root():
         "os": platform.platform(),
         "time": datetime.datetime.now()
     }
+
+@api.post('/chat')
+def chat():
+    ...
