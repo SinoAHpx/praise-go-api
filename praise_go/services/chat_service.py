@@ -1,7 +1,7 @@
 import requests
 from praise_go.model.message_model import Message
 
-def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, *prompts: list[Message]):
+def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, prompts: list[Message]):
     payload = {
         "model": model,
         "messages": [
@@ -23,4 +23,5 @@ def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, *p
         raise SystemError(f'Response error: {response.text}')
     
     json = response.json()
+ 
     return json["choices"][0]["message"]["content"]

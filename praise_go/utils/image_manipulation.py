@@ -1,7 +1,6 @@
 import base64
 import mimetypes
 import io
-from pathlib import Path
 from PIL import Image
 
 def getImgMimeType(image_path: str):
@@ -13,7 +12,7 @@ def getImgFomat(image_path: str):
     slash = mime.index('/')
     return mime[(slash + 1):]
     
-def imgToBase64Url(image_path: str) -> str:
+def from_image2base64url(image_path: str) -> str:
     # Get the mime type based on file extension
     mime_type, _ = mimetypes.guess_type(image_path)
     if not mime_type or not mime_type.startswith('image/'):
@@ -23,40 +22,34 @@ def imgToBase64Url(image_path: str) -> str:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
         return f"data:{mime_type};base64,{encoded_string}"
 
-def getCompressedSize(width, height) -> float:
-    max_dimension = 1368
-
-    if width <= max_dimension and height <= max_dimension:
-        return 1.0
-
-    if width > height:
-        return max_dimension / width
-    else:
-        return max_dimension / height
-
-def compressImg(img_local_path: str) -> bytes:
-    img = Image.open(img_local_path)
-    compress_ratio = getCompressedSize(img.width, img.height)
+def compress_image(image_path, max_size=(1000, 1000)):
+    # Open image
+    img = Image.open(image_path)
     
-    new_width = int(img.width * compress_ratio)
-    new_height = int(img.height * compress_ratio)
-    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-    output_buffer = io.BytesIO()
+    # Convert to RGB if necessary (e.g., for PNG with transparency)
+    if img.mode in ('RGBA', 'P'): 
+        img = img.convert('RGB')
     
-    img_format = getImgFomat(img_local_path)
+    # Check if image is already smaller than max_size
+    if img.size[0] <= max_size[0] and img.size[1] <= max_size[1]:
+        buffer = io.BytesIO()
+        img.save(buffer, format='JPEG', optimize=True)
+        return buffer.getvalue()
+        
+    # Calculate new dimensions maintaining aspect ratio
+    ratio = min(max_size[0]/img.size[0], max_size[1]/img.size[1])
+    new_size = tuple(int(dim * ratio) for dim in img.size)
+    img = img.resize(new_size, Image.Resampling.LANCZOS)
     
-    img.save(output_buffer, format=img_format, optimize=True, quality=50)
-    output_buffer.seek(0)
+    buffer = io.BytesIO()
+    img.save(buffer, format='JPEG', optimize=True)
     
-    compressed = output_buffer.getvalue()
+    return buffer.getvalue()
     
-    return compressed
-    
-def compressImgToBase64(img_local_path: str) -> str:
-    binary = compressImg(img_local_path)
+def from_image2compressed_base64(img_local_path: str) -> str:
+    binary = compress_image(img_local_path)
     
     encoded_string = base64.b64encode(binary).decode('utf-8')
-    mime = getImgMimeType(img_local_path)
-    
-    compressed_img = f"data:{mime};base64,{encoded_string}"
+
+    compressed_img = f"data:image/jpeg;base64,{encoded_string}"
     return compressed_img

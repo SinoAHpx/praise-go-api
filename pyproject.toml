@@ -5,6 +5,9 @@ description = "Backend support for PriseGo"
 authors = ["AHpx"]
 license = "MIT"
 readme = "README.md"
+packages = [
+    { include = "praise_go" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.13"
