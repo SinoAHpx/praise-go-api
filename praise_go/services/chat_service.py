@@ -1,7 +1,7 @@
 import requests
 from praise_go.model.message_model import Message
 
-def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, prompts: list[Message]):
+def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, prompts: list[Message]) -> str:
     payload = {
         "model": model,
         "messages": [
@@ -13,7 +13,7 @@ def request_chat(base_url: str, model: str, api_key: str, system_prompt: str, pr
     }
     
     payload["messages"].extend(prompt.serialize() for prompt in prompts)
-    
+
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
