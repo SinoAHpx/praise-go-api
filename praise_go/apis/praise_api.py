@@ -9,11 +9,11 @@ class PraiseInfo(BaseModel):
     image_path: str
     role: str
 
-def praise(info: PraiseInfo, api_key: str):
+def praise(info: PraiseInfo, api_key: str, url: str, model: str):
     prompt = load_prompt(info.role)
     params = {
-        "base_url": "https://api.siliconflow.cn/v1/chat/completions",
-        "model": "Pro/Qwen/Qwen2-VL-7B-Instruct",
+        "base_url": url,
+        "model": model,
         "api_key": api_key,
         "system_prompt": prompt,
         "prompts": [ImageMessage(from_image2compressed_base64(info.image_path))]
