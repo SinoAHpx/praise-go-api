@@ -1,4 +1,3 @@
-import os
 from pydantic import BaseModel
 
 from praise_go.model.message_model import ImageMessage
@@ -10,12 +9,12 @@ class PraiseInfo(BaseModel):
     image_path: str
     role: str
 
-def praise(info: PraiseInfo):
+def praise(info: PraiseInfo, api_key: str):
     prompt = load_prompt(info.role)
     params = {
-        "base_url": os.getenv('base'),
+        "base_url": "https://api.siliconflow.cn/v1/chat/completions",
         "model": "Pro/Qwen/Qwen2-VL-7B-Instruct",
-        "api_key": os.getenv('apikey'),
+        "api_key": api_key,
         "system_prompt": prompt,
         "prompts": [ImageMessage(from_image2compressed_base64(info.image_path))]
     }
