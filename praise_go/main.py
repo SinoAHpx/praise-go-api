@@ -1,6 +1,8 @@
 import datetime
-from fastapi import FastAPI
+from fastapi import Body, FastAPI, Header
 import platform
+
+from praise_go.apis.praise_api import PraiseInfo, praise
 
 api = FastAPI()
 
@@ -13,6 +15,10 @@ def root():
         "time": datetime.datetime.now()
     }
 
-@api.post('/chat')
-def chat():
-    ...
+@api.post('/praise')
+def go(info: PraiseInfo = Body(), key: str = Header(alias="Authorization")):
+    msg = praise(info, key)
+    return {
+        "role": info.role,
+        "message": msg
+    }
