@@ -22,9 +22,12 @@ def from_image_to_base64_url(image_path: str) -> str:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
         return f"data:{mime_type};base64,{encoded_string}"
 
-def compress_image(image_path, max_size=(1000, 1000)):
+def compress_image(image_bytes: bytes | str, max_size=(1000, 1000)):
     # Open image
-    img = Image.open(image_path)
+    if isinstance(image_bytes, str):
+        img = Image.open(image_bytes)
+    else:
+        img = Image.open(io.BytesIO(image_bytes))
     
     # Convert to RGB if necessary (e.g., for PNG with transparency)
     if img.mode in ('RGBA', 'P'): 
@@ -49,7 +52,16 @@ def compress_image(image_path, max_size=(1000, 1000)):
 def from_image_to_compressed_base64(img_local_path: str) -> str:
     binary = compress_image(img_local_path)
     
-    encoded_string = base64.b64encode(binary).decode('utf-8')
+    encoded_string = base64.b64encode(binary).decode()
 
     compressed_img = f"data:image/jpeg;base64,{encoded_string}"
+    return compressed_img
+
+def compress_base64_image(image_url: str) -> str :
+    b64 = image_url.split(";base64,")[1]
+    binary = base64.b64decode(b64)
+    image_binary = compress_image(binary)
+    encoded_string = base64.b64encode(image_binary).decode()
+    compressed_img = f"data:image/jpeg;base64,{encoded_string}"
+    
     return compressed_img
