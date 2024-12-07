@@ -3,16 +3,16 @@ import mimetypes
 import io
 from PIL import Image
 
-def getImgMimeType(image_path: str):
+def get_img_mime_type(image_path: str):
     type = mimetypes.guess_type(image_path)
     return type[0]
 
-def getImgFomat(image_path: str):
-    mime = getImgMimeType(image_path)
+def get_img_format(image_path: str):
+    mime = get_img_mime_type(image_path)
     slash = mime.index('/')
     return mime[(slash + 1):]
     
-def from_image2base64url(image_path: str) -> str:
+def from_image_to_base64_url(image_path: str) -> str:
     # Get the mime type based on file extension
     mime_type, _ = mimetypes.guess_type(image_path)
     if not mime_type or not mime_type.startswith('image/'):
@@ -46,7 +46,7 @@ def compress_image(image_path, max_size=(1000, 1000)):
     
     return buffer.getvalue()
     
-def from_image2compressed_base64(img_local_path: str) -> str:
+def from_image_to_compressed_base64(img_local_path: str) -> str:
     binary = compress_image(img_local_path)
     
     encoded_string = base64.b64encode(binary).decode('utf-8')
